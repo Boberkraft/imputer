@@ -3,6 +3,27 @@
  * sorry i dont know how to make tests.
  */
 
+/**
+ * ********************************************************************************
+ *                                 AJAX HOOK
+ * ********************************************************************************
+ * This hooks are for detecting if there are any uncompleted request that are still peding.
+ */
+
+
+var active_requests = 0;
+
+$( document ).ajaxSend(function() {
+  active_requests = active_requests + 1;
+  console.log(active_requests);
+});
+
+
+$( document ).ajaxComplete(function() {
+  active_requests = active_requests - 1;
+  console.log(active_requests);
+});
+
 
 // If the number of images is 0 -> Reload the site
 // Commented because sometime server dont have time to change state of all
@@ -37,6 +58,7 @@ Array.prototype.forEach.call(inputs, function (input) {
             label.innerHTML = fileName;
         } else
             label.innerHTML = labelVal;
+
     });
 });
 
@@ -56,7 +78,7 @@ function send_data(data, site, callback) {
         data: JSON.stringify(data, null, '\t'),
         contentType: 'application/json;charset=UTF-8',
         success: function (result) {
-            if (typeof callback === undefined){
+            if (typeof callback === "undefined"){
                 console.log(result);
             }
             else {
@@ -81,10 +103,11 @@ $('#attachments').change(function () {
         cache: false,
         success: function (result) {
             console.log('new images');
-            $('output').append(result);
-            $('#edit_menu_online').addClass('hide');
+            console.log(result.length/1400);
+            $('output').html(result);
+            // $('#edit_menu_online').addClass('hide');
             $('#edit_menu_local').removeClass('hide');
-            $('#attachments_button').addClass('hide');
+            // $('#attachments_button').addClass('hide');
         }
     });
 });
@@ -143,7 +166,7 @@ function unselect_image(thisObj) {
         'mode': 'selected'
     };
     send_data(data, 'change_state/')
-    $(thisObj).parent().parent().parent().removeClass('selected');
+    $(thisObj).closest('.card').removeClass('selected');
     $(thisObj).html('Zaznacz');
     $(thisObj).attr('triggered', '0');
 };
@@ -152,20 +175,31 @@ function unselect_image(thisObj) {
  *                  Functions to invoked on buttons with global meaning
  * ********************************************************************************
  */
-
+// EDITING HOOK to unselect all selected TODO: Just send Query to database and delete output.
+$('#unselect_all').click(function () {
+    $('.select-bt').each(function () {
+        console.log($(this));
+        unselect_image($(this));
+    });
+});
 
 // EDITING HOOK to trigger save button on every CARD
 $('#save_all').click(function () {
-    $('.save-bt').each(save_image($(this)))
+    $('.save-bt').each(function () {
+        save_image($(this));
+    });
 });
 
 // EDITING HOOK to trigger delete button on every CARD
 $('#delete_all').click(function () {
-    $('.delete-bt').each(delete_image($(this)))
+    $('.delete-bt').each(function () {
+        delete_image($(this));
+    });
 });
 
 // EDITING HOOK to add tag to every loaded CARD input field
 $('#tags_all').click(function () {
+    console.log('untag all');
     var tags = $('#tags_all_input').val();
     $('.tags-1').each(function () {
         var values = $(this).val();
@@ -183,7 +217,7 @@ $('#tags_all').click(function () {
 
 /**
  * ********************************************************************************
- *                        Functions working with a CARD
+ *                        Hooks working with a CARD
  * ********************************************************************************
  */
 
