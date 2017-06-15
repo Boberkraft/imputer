@@ -1,8 +1,8 @@
 from DataManager import DataManager
 from random import randint
 
-class ImageManager:
 
+class ImageManager:
     def __init__(self, path):
         self.path = path
         self.conf = 'images.txt'
@@ -24,6 +24,7 @@ class ImageManager:
 
     def add(self, tag, name):
         pass
+
 
 if __name__ == '__main__':
     images = ImageManager('images/')

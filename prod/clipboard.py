@@ -10,6 +10,7 @@ import os
 
 import sys
 
+
 class ClipBoard:
     @classmethod
     def send_to_clipboard(cls, clip_type, data):
@@ -20,7 +21,7 @@ class ClipBoard:
 
     @classmethod
     def erase(cls, name):
-        for _ in name+' ':
+        for _ in name + ' ':
             keyboard.send('backspace')
 
     @classmethod
@@ -39,10 +40,10 @@ class ClipBoard:
         cls.erase(tag)
         shell.SendKeys('^(v)')
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     # keyboard.hook_key('a', keydown_callback=xd)
-    keyboard.add_word_listener('69sad', sad    , timeout=0)
+    keyboard.add_word_listener('69sad', sad, timeout=0)
     keyboard.add_word_listener('69angry', angry, timeout=0)
     keyboard.add_word_listener('69happy', happy, timeout=0)
     keyboard.add_word_listener('69prorok', prorok, timeout=0)

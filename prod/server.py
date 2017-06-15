@@ -20,9 +20,11 @@ IMAGE_SIZE_QUALITY = 2
 ###
 qlty = IMAGE_SIZE_QUALITY
 
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSION
+
 
 @app.route('/upload_files/', methods=['GET', 'POST'])
 def upload_files():
@@ -51,8 +53,9 @@ def upload_files():
 
 def generate_thumb(path):
     image = Image.open(path)
-    image.thumbnail((400*qlty, 300*qlty))
+    image.thumbnail((400 * qlty, 300 * qlty))
     return image
+
 
 @app.route('/change_state/', methods=['GET', 'POST'])
 def change():
@@ -85,9 +88,12 @@ def change():
             print('Undefinied mode!')
         return str({'status': 'ok'})
     return str({'status': 'failed'})
+
+
 @app.route('/view/')
 def view_images():
     return 'wyswietlasz'
+
 
 @app.route('/uploads/<path>')
 def get_files(path):
@@ -96,14 +102,15 @@ def get_files(path):
     file_path = os.path.join(up_folder, secure_filename(path))
     image = generate_thumb(file_path)
     img_w, img_h = image.size
-    background = Image.new('RGBA', (400*qlty, 300*qlty), (255,255,255,255))
+    background = Image.new('RGBA', (400 * qlty, 300 * qlty), (255, 255, 255, 255))
     bg_w, bg_h = background.size
-    offset = (bg_w - img_w)//2, (bg_h - img_h)//2
+    offset = (bg_w - img_w) // 2, (bg_h - img_h) // 2
     background.paste(image, offset)
     fake_file = BytesIO()
     background.save(fake_file, 'PNG')
     fake_file.seek(0)
     return send_file(fake_file, mimetype='image/png')
+
 
 @app.route('/add/')
 def dodaj():
@@ -112,6 +119,7 @@ def dodaj():
 
     return render_template('add.html', images=images, static='/uploads/')
 
+
 @app.route('/selected/')
 def selected_page():
     images = User.get_selected()
@@ -119,31 +127,34 @@ def selected_page():
 
     return render_template('selected.html', images=images, static='/uploads/')
 
+
 @app.route('/upload/')
 def upload_page():
-
     return render_template('upload.html', images=[], static='/uploads/')
+
 
 @app.route('/update/')
 def contact_page():
     news = news_page()
     return render_template('update.html', images=[], news=news, static='/uploads/')
 
+
 @app.route('/news/')
 def news_page():
     news = [
-            {'date': 'czas',
-             'content': 'Chyba teraz wszystko działa',
-             'author': 'Andrzej Bisewski',
-             'image': 'https://avatars3.githubusercontent.com/u/16669574',
-             'github': '@Boberkraft'},
+        {'date': 'czas',
+         'content': 'Chyba teraz wszystko działa',
+         'author': 'Andrzej Bisewski',
+         'image': 'https://avatars3.githubusercontent.com/u/16669574',
+         'github': '@Boberkraft'},
         {'date': 'czas',
          'content': 'Hello my first post',
          'author': 'Andrzej Bisewski',
          'image': 'https://avatars3.githubusercontent.com/u/16669574',
          'github': '@Boberkraft'}
-            ]
+    ]
     return news
+
 
 @app.route('/get_image/<tag>')
 def get_image_page(tag):
@@ -153,12 +164,13 @@ def get_image_page(tag):
         return path
     else:
         return ''
+
+
 @app.route('/')
 def main():
     images = User.get_images()
     images = [img for img in images]
     return render_template('index.html', images=images, static='/uploads/')
+
+
 app.run()
-
-
-

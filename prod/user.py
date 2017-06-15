@@ -3,8 +3,8 @@ from singleton import Singleton
 import os
 import random
 
-class User:
 
+class User:
     @staticmethod
     def unselect(id=None):
         if id is None:
@@ -56,7 +56,7 @@ class User:
                     Database.session.add(Database.Tag(name=tag))
                     print('Creating new tag:', tag)
                 database_tag = Database.session.query(Database.Tag).filter_by(name=tag).first()
-                print('SELECTED TAG!!!!!!!!!!!',database_tag)
+                print('SELECTED TAG!!!!!!!!!!!', database_tag)
                 img.tags.append(database_tag)
         Database.commit()
 
@@ -65,11 +65,11 @@ class User:
         tag = tag.strip()
         print('lloooking for', tag, len(tag))
 
-        got = Database.session.query(Database.Image).filter(Database.Image.tags.any(name=tag)).order_by(Database.func.random())
+        got = Database.session.query(Database.Image).filter(Database.Image.tags.any(name=tag)).order_by(
+            Database.func.random())
         try:
 
             if got:
-
                 return got[0].file
         except ValueError:
             pass
@@ -115,22 +115,23 @@ class User:
     def get_images():
 
         return (Database.session.query(Database.Image)
-              .outerjoin(Database.Uploaded)
-              .filter(Database.Uploaded.id == None))
+                .outerjoin(Database.Uploaded)
+                .filter(Database.Uploaded.id == None))
+
 
 if __name__ == '__main__':
     x = User()
     x.unselect(1)
 
 
-# Get commong
-# SELECT * FROM selected
-# INNER JOIN images
-# ON images.id = selected.image_id
+    # Get commong
+    # SELECT * FROM selected
+    # INNER JOIN images
+    # ON images.id = selected.image_id
 
-# Get this in Images that are not in Selected
-# SELECT *
-# FROM images A
-# LEFT JOIN selected B
-# ON A.id = B.image_id
-# WHERE B.image_id IS NULL
+    # Get this in Images that are not in Selected
+    # SELECT *
+    # FROM images A
+    # LEFT JOIN selected B
+    # ON A.id = B.image_id
+    # WHERE B.image_id IS NULL

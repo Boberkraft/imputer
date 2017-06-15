@@ -7,9 +7,10 @@ import requests
 import shutil
 
 
+# TODO: https://stackoverflow.com/questions/25950049/creating-a-transparent-overlay-with-qt
+
 
 class Client:
-
     def listen(self):
         while True:
             keyboard.wait('.')
@@ -24,7 +25,6 @@ class Client:
         if r.status_code == 200 and r.text:
             path = r.text
             ClipBoard.paste(path, tag)
-
 
 
 cl = Client()

@@ -1,23 +1,22 @@
 {% if active_page != '/' %}
-    {% set save = ''  %}
-    {% set edit = 'hide' %}
+{% set save = ''  %}
+{% set edit = 'hide' %}
 {% else %}
-    {% set save = 'hide' %}
-    {% set edit = '' %}
+{% set save = 'hide' %}
+{% set edit = '' %}
 {% endif %}
 {% for image in images %}
 
-    {% if loop.index0 % 4 == 0 %}
-        <div class="columns">
+{% if loop.index0 % 4 == 0 %}
+<div class="columns">
     {% endif %}
     <div class="column {% if image.selected is not none %}selected{% endif %}">
         <div class="card">
             <div class="card-image">
 
 
-
                 <figure class="image is-4by3 ">
-                        <img src="{{ static }}{{ image.file }}" alt="Image">
+                    <img src="{{ static }}{{ image.file }}" alt="Image">
                 </figure>
 
             </div>
@@ -58,21 +57,19 @@
                 <a class="card-footer-item save-bt {{ save }}">Zapisz</a>
 
 
-
                 <a class="card-footer-item edit-bt {{ edit }}">Edytuj</a>
 
 
                 {% if image.selected is none %}
-                    <a triggered="0" class="card-footer-item select-bt">Zaznacz</a>
+                <a triggered="0" class="card-footer-item select-bt">Zaznacz</a>
                 {% else %}
-                    <a triggered="1" class="card-footer-item select-bt">Odznacz</a>
+                <a triggered="1" class="card-footer-item select-bt">Odznacz</a>
                 {% endif %}
-                <a class="card-footer-item delete-bt" >Usuń</a>
+                <a class="card-footer-item delete-bt">Usuń</a>
             </footer>
             <script>
                 $(document).ready(function () {
                     change_loaded_images(1);
-
 
 
                 });
@@ -82,6 +79,6 @@
         </div>
     </div>
     {% if loop.index0 % 4 == 3 or loop.last %}
-        </div>
-    {% endif %}
+</div>
+{% endif %}
 {% endfor %}
