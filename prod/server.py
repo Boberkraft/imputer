@@ -198,3 +198,12 @@ def main():
 
 
 app.run()
+# TODO: searching by tag
+# TODO: online server to upload/download pictures
+# TODO: message to online server
+# TODO: cache small pictures
+# TODO: refactor User class
+# TODO: refactor Database class
+# TODO: redo Client just to make it work
+# TODO: refactor server
+
