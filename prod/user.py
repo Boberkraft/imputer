@@ -1,4 +1,4 @@
-from database import Database
+import database as Database
 import os
 import random
 

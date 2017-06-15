@@ -66,31 +66,10 @@ Base.metadata.create_all(engine)
 # img = Image(name='Zenek')
 # print(img)
 
-class Database:
-    Tag = Tag
-    Image = Image
-    Selected = Selected
-    Uploaded = Uploaded
-    session = Session()
-    text = text
-    func = func
 
-    @classmethod
-    def commit(cls):
-        cls.session.commit()
-        # try:
-        #     cls.session.commit()
-        # except:
-        #     print('ROLLBACKING AN ERROR OCCURRED!!!!!!!!!!!!!!!!!!!')
-        #     cls.session.rollback()
-
-        # session.add_all([...])
-        # session.add(...)
-        # session.commit()
-        # session.query(User).filter(User.name.in_(['Edwardo', 'fakeuser'])).all()
-        # session.delete(jack)
-        # our_user = session.query(User).filter_by(name='ed').first()
-
+session = Session()
+def commit():
+    Base.session.commit()
 
 """class User(db.Model):
     #...
@@ -105,4 +84,21 @@ class Database:
             return self
 
     def is_following(self, user):
-        return self.followed.filter(followers.c.followed_id == user.id).count() > 0"""
+        return self.followed.filter(followers.c.followed_id == user.id).count() > 0
+        
+        
+        
+        
+        # try:
+        #     cls.session.commit()
+        # except:
+        #     print('ROLLBACKING AN ERROR OCCURRED!!!!!!!!!!!!!!!!!!!')
+        #     cls.session.rollback()
+
+        # session.add_all([...])
+        # session.add(...)
+        # session.commit()
+        # session.query(User).filter(User.name.in_(['Edwardo', 'fakeuser'])).all()
+        # session.delete(jack)
+        # our_user = session.query(User).filter_by(name='ed').first()
+"""

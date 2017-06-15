@@ -1,33 +1,34 @@
-from flask import Flask, request, render_template, send_file, redirect, url_for
+from flask import Flask, request, render_template, send_file, redirect, url_for, send_from_directory
 from flask_cors import CORS, cross_origin
-from werkzeug.utils import secure_filename
+
+from imagemanager import ImageFileManager
 from PIL import Image, ImageOps
 from io import BytesIO
 import threading
 import os
 import uuid
 
-from database import Database
+import database as Database
 from user import User
 
 app = Flask(__name__, static_folder='files', static_url_path='')
 CORS(app)
-ALLOWED_EXTENSION = set('text pdf png jpg jpeg gif'.split())
+
 ALLOWED_MODE = ('selected', 'database')
 ALLOWED_ACTION = ('add', 'select', 'delete', 'unselect')
 UPLOAD_FOLDER = 'uploads/'
-IMAGE_SIZE_QUALITY = 2
-###
-qlty = IMAGE_SIZE_QUALITY
+THUMB_FOLDER = 'thumbs/'
+image_file_M = ImageFileManager(UPLOAD_FOLDER, THUMB_FOLDER)
 
 
 class Config:
     navigation_tabs = [('/', 'Menu'),
-    ('/add/', 'Dodaj'),
-    ('/upload/', 'Udostępnij'),
-    ('/update/', 'Aktualizacje')]
+                       ('/add/', 'Dodaj'),
+                       ('/upload/', 'Udostępnij'),
+                       ('/update/', 'Aktualizacje')]
 
     images_path = '/uploads/'
+
 
 old_render_template = render_template
 
@@ -36,40 +37,17 @@ def render_template(*args, **kwargs):
     return old_render_template(*args, **kwargs, config=Config)
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSION
-
-
 @app.route('/upload_files/', methods=['GET', 'POST'])
 def upload_files():
-    files_added = []
     images = []
-    added = []
     if request.method == 'POST':
-        if 'file' not in request.files:
-            pass
-        files = request.files.getlist('files[]')
+        files = request.files.getlist('files[]')  # get uploaded files
         for file in files:
-            if file.filename == '':
-                pass
-            if file and allowed_file(file.filename):
-                original_filename = secure_filename(file.filename)
-                random_filename = str(uuid.uuid4()) + '.' + original_filename.split('.')[1]
-                file.save(os.path.join('uploads', random_filename))
-                files_added.append(random_filename)
-
-                # prepere to select
-                images.append(dict(name=random_filename, original_name=original_filename, file=random_filename))
-    User.upload(images)
-    images = User.get_uploaded()
+            name, random = image_file_M.new(file)  # add files to disc and return filenames
+            images.append(dict(name=random, original_name=name, file=random))  # just like in database
+    User.upload(images)  # upload them to database
+    images = User.get_uploaded().all()  # return uploaded images
     return render_template('cards.html', images=images)
-
-
-def generate_thumb(path):
-    image = Image.open(path)
-    image.thumbnail((400 * qlty, 300 * qlty))
-    return image
 
 
 @app.route('/change_state/', methods=['GET', 'POST'])
@@ -105,30 +83,19 @@ def change():
     return redirect(url_for('get_single_card', id=msg['id']))
 
 
-@app.route('/view/')
-def view_images():
-    return 'wyswietlasz'
 
 
-@app.route('/uploads/<path>')
-def get_files(path):
-    folder = os.path.dirname(os.path.abspath(__file__))
-    up_folder = os.path.join(folder, 'uploads/')
-    file_path = os.path.join(up_folder, secure_filename(path))
-    image = generate_thumb(file_path)
-    img_w, img_h = image.size
-    background = Image.new('RGBA', (400 * qlty, 300 * qlty), (255, 255, 255, 255))
-    bg_w, bg_h = background.size
-    offset = (bg_w - img_w) // 2, (bg_h - img_h) // 2
-    background.paste(image, offset)
-    fake_file = BytesIO()
-    background.save(fake_file, 'PNG')
-    fake_file.seek(0)
-    return send_file(fake_file, mimetype='image/png')
+@app.route('/uploads/<path:name>')
+def get_files(name):
+    """Returns thumbnail with this random name."""
+    return send_from_directory('thumbs', name)
+    # return send_file(image_file_M.get_thumbnail(name), mimetype='image/png')
 
 
 @app.route('/add/')
 def dodaj():
+    """Page for adding more images"""
+    # get loaded but not saved images
     images = User.get_uploaded()
     images = [img for img in images]
 
@@ -137,6 +104,8 @@ def dodaj():
 
 @app.route('/selected/')
 def selected_page():
+    """Page for working with selected images"""
+    # get selected images
     images = User.get_selected()
     images = [img for img in images]
 
@@ -152,6 +121,7 @@ def upload_page():
 def contact_page():
     news = news_page()
     return render_template('update.html', news=news)
+
 
 @app.route('/image_card/<id>')
 def get_single_card(id):
@@ -183,11 +153,10 @@ def news_page():
 @app.route('/get_image/<tag>')
 def get_image_page(tag):
     print('GOT TAG', tag.strip())
-    path = User.get_by_tag(tag)
-    if path:
-        return path
-    else:
-        return ''
+    image = User.get_by_tag(tag)
+    if image:
+        return image
+    return ''
 
 
 @app.route('/')
@@ -201,9 +170,11 @@ app.run()
 # TODO: searching by tag
 # TODO: online server to upload/download pictures
 # TODO: message to online server
-# TODO: cache small pictures
-# TODO: refactor User class
+# DONE: cache small pictures
+# TODO: refactor User class, DO .ALL()
 # TODO: refactor Database class
 # TODO: redo Client just to make it work
 # TODO: refactor server
-
+# TODO: detect image duplicates
+# TODO: do way do undo delete baceuse missclick
+# TODO: block uploading without tags

@@ -4,3 +4,9 @@ prod/__pycache__/
 images/Thumbs\.db
 
 \.idea/
+
+prod/uploads/Thumbs\.db
+
+prod/thumbs/Thumbs\.db
+
+prod/core/__pycache__/
