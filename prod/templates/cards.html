@@ -1,0 +1,21 @@
+{% if active_page != '/' %}
+    {% set save = ''  %}
+    {% set edit = 'hide' %}
+{% else %}
+    {% set save = 'hide' %}
+    {% set edit = '' %}
+{% endif %}
+
+    {% for image in images %}
+
+    {% if loop.index0 % 4 == 0 %}
+    <div class="columns">
+    {% endif %}
+        <div class="column">
+        {% include "card.html" %}
+        </div>
+    {% if loop.index0 % 4 == 3 or loop.last %}
+    </div>
+    {% endif %}
+
+{% endfor %}

@@ -1,12 +1,14 @@
 /**
  * Created by Bobi on 14.06.2017.
+ * sorry i dont know how to make tests.
  */
 
 
 // If the number of images is 0 -> Reload the site
 // Commented because sometime server dont have time to change state of all
-// selected pictures so it stops in the middle of work.
+// selected pictures so it stops in the middle of work leading to weird thinks.
 // TODO: Change AJAX to fix this
+var loaded_images = 0;
 function change_loaded_images(what) {
     loaded_images = loaded_images + what;
     if (loaded_images <= 0) {
@@ -45,7 +47,7 @@ Array.prototype.forEach.call(inputs, function (input) {
  */
 
 // Universal function to send JSON to server.
-function send_data(data, site) {
+function send_data(data, site, callback) {
     $.ajax({
         url: "http://localhost:5000/" + site,
         type: "POST",
@@ -54,7 +56,12 @@ function send_data(data, site) {
         data: JSON.stringify(data, null, '\t'),
         contentType: 'application/json;charset=UTF-8',
         success: function (result) {
-            console.log(result);
+            if (typeof callback === undefined){
+                console.log(result);
+            }
+            else {
+                callback(result)
+            }
         }
     });
 
@@ -84,6 +91,64 @@ $('#attachments').change(function () {
 
 /**
  * ********************************************************************************
+ *                  Functions to that change statis
+ * ********************************************************************************
+ */
+
+function delete_image(thisObj) {
+    $(thisObj).parent().parent().addClass('hide');
+    var data = {
+        'id': $(thisObj).parent().attr('id'),
+        'action': 'delete',
+        'mode': 'selected'
+    };
+    send_data(data, 'change_state/');
+    change_loaded_images(-1);
+};
+
+function save_image(thisObj) {
+    var card = $(thisObj).closest('.card');
+    var tags = card.find(".tags-1").val();
+    var id = card.attr('image_id');
+    console.log(id)
+    var data = {
+        'id': id,
+        'action': 'add',
+        'mode': 'selected',
+        'tags': tags
+    };
+    send_data(data, 'change_state/', function (response) {
+        card.replaceWith(response);
+    });
+    change_loaded_images(-1);
+};
+
+function select_image(thisObj) {
+
+    var data = {
+        'id': $(thisObj).closest('.card').attr('image_id'),
+        'action': 'select',
+        'mode': 'selected'
+    };
+    send_data(data, 'change_state/');
+    $(thisObj).closest('.card').addClass('selected');
+    $(thisObj).html('Odznacz');
+    $(thisObj).attr('triggered', '1');
+};
+
+function unselect_image(thisObj) {
+    var data = {
+        'id': $(thisObj).closest('.card').attr('image_id'),
+        'action': 'unselect',
+        'mode': 'selected'
+    };
+    send_data(data, 'change_state/')
+    $(thisObj).parent().parent().parent().removeClass('selected');
+    $(thisObj).html('Zaznacz');
+    $(thisObj).attr('triggered', '0');
+};
+/**
+ * ********************************************************************************
  *                  Functions to invoked on buttons with global meaning
  * ********************************************************************************
  */
@@ -91,39 +156,15 @@ $('#attachments').change(function () {
 
 // EDITING HOOK to trigger save button on every CARD
 $('#save_all').click(function () {
-    $('.save-bt').each(function () {
-        var first = $(this).parent().parent().find(".tags-1").val();
-        var second = ',';
-        var tags = first;
-        $(this).parent().parent().html('Added with tags: ' + JSON.stringify(tags) + '<br>Undo');
-        var data = {
-            'id': $(this).parent().attr('id'),
-            'action': 'add',
-            'mode': 'selected',
-            'tags': tags
-        };
-        send_data(data, 'change_state/');
-        change_loaded_images(-1);
-    });
-
+    $('.save-bt').each(save_image($(this)))
 });
 
 // EDITING HOOK to trigger delete button on every CARD
 $('#delete_all').click(function () {
-    $('.delete-bt').each(function () {
-        $(this).parent().parent().addClass('hide');
-        var data = {
-            'id': $(this).parent().attr('id'),
-            'action': 'delete',
-            'mode': 'selected'
-        };
-        send_data(data, 'change_state/');
-        change_loaded_images(-1);
-    })
-
+    $('.delete-bt').each(delete_image($(this)))
 });
 
-// EDITING HOOK to add tag to every loaded CARD
+// EDITING HOOK to add tag to every loaded CARD input field
 $('#tags_all').click(function () {
     var tags = $('#tags_all_input').val();
     $('.tags-1').each(function () {
@@ -151,55 +192,23 @@ $('output').on('click', '.select-bt', function () {
     var selected = $(this).attr("triggered");
     console.log(selected);
     if (selected == 0) {
-        var data = {
-            'id': $(this).parent().attr('id'),
-            'action': 'select',
-            'mode': 'selected'
-        };
-        send_data(data, 'change_state/');
-        $(this).parent().parent().parent().addClass('selected');
-        $(this).html('Odznacz');
-        $(this).attr('triggered', '1');
+        select_image($(this));
     } else {
-        var data = {
-            'id': $(this).parent().attr('id'),
-            'action': 'unselect',
-            'mode': 'selected'
-        };
-        send_data(data, 'change_state/')
-        $(this).parent().parent().parent().removeClass('selected');
-        $(this).html('Zaznacz');
-        $(this).attr('triggered', '0');
+        unselect_image($(this));
     }
 
 });
 
 // CARD Hook. If Delete button pressed. It sends AJAX to delete its id from database
 $('output').on('click', '.delete-bt', function () {
-    $(this).parent().parent().addClass('hide');
-    var data = {
-        'id': $(this).parent().attr('id'),
-        'action': 'delete',
-        'mode': 'selected'
-    };
-    send_data(data, 'change_state/');
-    change_loaded_images(-1);
+    delete_image($(this))
 });
 
 // CARD Hook. If Save button pressed It sends AJAX to with tags in its input field.
 $('output').on('click', '.save-bt', function () {
-    var first = $(this).parent().parent().find(".tags-1").val();
-    var tags = first;
-    $(this).parent().parent().html('Added with tags: ' + JSON.stringify(tags) + '<br>Undo');
-    var data = {
-        'id': $(this).parent().attr('id'),
-        'action': 'add',
-        'mode': 'selected',
-        'tags': tags
-    };
-    send_data(data, 'change_state/');
-    change_loaded_images(-1);
+     save_image($(this))
 });
+
 
 // CARD Hook for saving if enter is pressed in editing
 $('output').on('keypress', '.tags-1', function (e) {
@@ -210,8 +219,8 @@ $('output').on('keypress', '.tags-1', function (e) {
 
 // CARD Hook for hiding tags and reveling its input field
 $('output').on('click', '.edit-bt', function () {
-    $(this).parent().parent().parent().find(".hidden_form").removeClass('hide');
-    $(this).parent().parent().parent().find(".hidden_tags").addClass('hide');
-    $(this).parent().find('.save-bt').removeClass('hide');
+    $(this).closest('.card').find(".hidden_form").removeClass('hide');
+    $(this).closest('.card').find(".hidden_tags").addClass('hide');
+    $(this).closest('.card').find('.save-bt').removeClass('hide');
     $(this).addClass('hide');
 });

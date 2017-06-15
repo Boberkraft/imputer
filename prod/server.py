@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, redirect, url_for
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 from PIL import Image, ImageOps
@@ -19,6 +19,21 @@ UPLOAD_FOLDER = 'uploads/'
 IMAGE_SIZE_QUALITY = 2
 ###
 qlty = IMAGE_SIZE_QUALITY
+
+
+class Config:
+    navigation_tabs = [('/', 'Menu'),
+    ('/add/', 'Dodaj'),
+    ('/upload/', 'Udostępnij'),
+    ('/update/', 'Aktualizacje')]
+
+    images_path = '/uploads/'
+
+old_render_template = render_template
+
+
+def render_template(*args, **kwargs):
+    return old_render_template(*args, **kwargs, config=Config)
 
 
 def allowed_file(filename):
@@ -48,7 +63,7 @@ def upload_files():
                 images.append(dict(name=random_filename, original_name=original_filename, file=random_filename))
     User.upload(images)
     images = User.get_uploaded()
-    return render_template('card.html', images=images, static='/uploads/')
+    return render_template('cards.html', images=images)
 
 
 def generate_thumb(path):
@@ -86,8 +101,8 @@ def change():
                 User.delete_selected()
         else:
             print('Undefinied mode!')
-        return str({'status': 'ok'})
-    return str({'status': 'failed'})
+            return str('something went wrong.')
+    return redirect(url_for('get_single_card', id=msg['id']))
 
 
 @app.route('/view/')
@@ -117,7 +132,7 @@ def dodaj():
     images = User.get_uploaded()
     images = [img for img in images]
 
-    return render_template('add.html', images=images, static='/uploads/')
+    return render_template('add.html', images=images)
 
 
 @app.route('/selected/')
@@ -125,18 +140,27 @@ def selected_page():
     images = User.get_selected()
     images = [img for img in images]
 
-    return render_template('selected.html', images=images, static='/uploads/')
+    return render_template('selected.html', images=images)
 
 
 @app.route('/upload/')
 def upload_page():
-    return render_template('upload.html', images=[], static='/uploads/')
+    return render_template('upload.html')
 
 
 @app.route('/update/')
 def contact_page():
     news = news_page()
-    return render_template('update.html', images=[], news=news, static='/uploads/')
+    return render_template('update.html', news=news)
+
+@app.route('/image_card/<id>')
+def get_single_card(id):
+    id = id.strip()
+    if id:
+        image = User.get_by_id(id)
+        if image:
+            return render_template('card.html', image=image, save='hide', edit='')
+    return 'Image with id = {} not found'.format(id)
 
 
 @app.route('/news/')
@@ -170,7 +194,7 @@ def get_image_page(tag):
 def main():
     images = User.get_images()
     images = [img for img in images]
-    return render_template('index.html', images=images, static='/uploads/')
+    return render_template('index.html', images=images)
 
 
 app.run()

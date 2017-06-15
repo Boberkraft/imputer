@@ -1,10 +1,14 @@
 from database import Database
-from singleton import Singleton
 import os
 import random
 
 
 class User:
+    @staticmethod
+    def get_by_id(id):
+        # Return image with specific id
+        return Database.session.query(Database.Image).filter_by(id=id).first()
+
     @staticmethod
     def unselect(id=None):
         if id is None:

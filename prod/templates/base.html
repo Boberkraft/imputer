@@ -1,9 +1,3 @@
-{% set tabs = [
-('/', 'Menu'),
-('/add/', 'Dodaj'),
-('/upload/', 'Udostępnij'),
-('/update/', 'Aktualizacje')]
-%}
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="/bulma.css">
     <link rel="stylesheet" type="text/css" href="/style.css">
     <script src="/jquery.js"></script>
-    <script src="/script.js"></script>
+
 </head>
 <body>
 <body class="container">
@@ -19,9 +13,9 @@
     <div class="container">
         <div class="nav-left">
             <a class="nav-item" href="/">
-                <img src="/logo.png" alt="Inputer logo">
+                <img src="/logo.png" alt="Imputer logo">
             </a>
-            {% for short, name in tabs %}
+            {% for short, name in config.navigation_tabs %}
             <a href="{{ short }}"
                class="nav-item is-tab is-hidden-mobile {% if short == active_page %} is-active {% endif %}">
                 {{name}}
@@ -29,10 +23,10 @@
             {% endfor %}
         </div>
         <span class="nav-toggle">
-					<span></span>
-					<span></span>
-					<span></span>
-				</span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
         <div class="nav-right nav-menu">
             <a class="nav-item is-tab is-hidden-tablet is-active">Menu</a>
             <a class="nav-item is-tab is-hidden-tablet">Dodaj</a>
@@ -55,12 +49,12 @@
         <div class="empty"></div>
         {% if images is defined %}
         <output>
-            {% include "card.html" %}
+            {% include "cards.html" %}
         </output>
         {% endif %}
 
     </div>
 </section>
-
+<script src="/script.js"></script>
 </body>
 </html>

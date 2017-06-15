@@ -1,84 +1,53 @@
-{% if active_page != '/' %}
-{% set save = ''  %}
-{% set edit = 'hide' %}
-{% else %}
-{% set save = 'hide' %}
-{% set edit = '' %}
-{% endif %}
-{% for image in images %}
+<div class="card {% if image.selected is not none %}selected{% endif %}" image_id="{{image.id}}">
+    <div class="card-image">
 
-{% if loop.index0 % 4 == 0 %}
-<div class="columns">
-    {% endif %}
-    <div class="column {% if image.selected is not none %}selected{% endif %}">
-        <div class="card">
-            <div class="card-image">
+        <figure class="image is-4by3 ">
+            <img src="{{ config.images_path }}{{ image.file }}" alt="Image">
+        </figure>
 
-
-                <figure class="image is-4by3 ">
-                    <img src="{{ static }}{{ image.file }}" alt="Image">
-                </figure>
-
-            </div>
-            <div class="card-content">
-                <div class="media">
-                    <div class="media-content">
-                        <div class="hidden_form {% if active_page == '/' %} hide {% endif %} ">
-
-                            <div class="field">
-                                <p class="control">
-                                    <input class="input is-danger tags-1" type="text" placeholder="smutek, zal, zlosc"
-                                           value="{% for tag in image.tags %} {{ tag }}, {% endfor %}">
-                                </p>
-                            </div>
-                            <!-- <div class="field">
-                                <p class="control">
-                                    <input class="input is-info tags-2" type="text" placeholder="Tagi poboczne">
-                                </p>
-                            </div> -->
-                        </div>
-
-                        <div class="hidden_tags {% if active_page != '/' %} hide {% endif %} ">
-                            <div class="block">
-                                {% for tag in image.tags %}
-                                <span class="tag is-primary">
-                                    {{ tag }}
-                                </span>
-                                {% endfor %}
-                            </div>
-
-                        </div>
-
+    </div>
+    <div class="card-content">
+        <div class="media">
+            <div class="media-content">
+                <div class="hidden_form {% if not edit %} hide {% endif %} ">
+                    <div class="field">
+                        <p class="control">
+                            <input class="input is-danger tags-1" type="text" placeholder="smutek, zal, zlosc"
+                                   value="{% for tag in image.tags %} {{ tag }}, {% endfor %}">
+                        </p>
                     </div>
                 </div>
+
+                <div class="hidden_tags {% if not save %} hide {% endif %} ">
+                    <div class="block">
+                        {% for tag in image.tags %}
+                        <span class="tag is-primary">
+                            {{ tag }}
+                        </span>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
             </div>
-            <footer class="card-footer" id="{{ image.id }}">
-
-                <a class="card-footer-item save-bt {{ save }}">Zapisz</a>
-
-
-                <a class="card-footer-item edit-bt {{ edit }}">Edytuj</a>
-
-
-                {% if image.selected is none %}
-                <a triggered="0" class="card-footer-item select-bt">Zaznacz</a>
-                {% else %}
-                <a triggered="1" class="card-footer-item select-bt">Odznacz</a>
-                {% endif %}
-                <a class="card-footer-item delete-bt">Usuń</a>
-            </footer>
-            <script>
-                $(document).ready(function () {
-                    change_loaded_images(1);
-
-
-                });
-
-
-            </script>
         </div>
     </div>
-    {% if loop.index0 % 4 == 3 or loop.last %}
+    <footer class="card-footer" id="{{ image.id }}">
+
+        <a class="card-footer-item save-bt {{ save }}">Zapisz</a>
+
+        <a class="card-footer-item edit-bt {{ edit }}">Edytuj</a>
+
+        {% if image.selected is none %}
+        <a triggered="0" class="card-footer-item select-bt">Zaznacz</a>
+        {% else %}
+        <a triggered="1" class="card-footer-item select-bt">Odznacz</a>
+        {% endif %}
+        <a class="card-footer-item delete-bt">Usuń</a>
+    </footer>
+    <script>
+        $(document).ready(function () {
+            change_loaded_images(1);
+        });
+    </script>
 </div>
-{% endif %}
-{% endfor %}
