@@ -1,7 +1,7 @@
 import database as Database
 import os
 import random
-
+from imagemanager import image_file_M
 
 class User:
     @staticmethod
@@ -89,12 +89,12 @@ class User:
         Database.session.query(Database.Uploaded).filter_by(image_id=id).delete()
         img = Database.session.query(Database.Image).filter_by(id=id).first()
         try:
-            path = os.path.join('uploads', img.file)
-            os.remove(path)  # remove file
-        except FileNotFoundError:
-            print('File {} not found'.format(path))
-        Database.session.delete(img)
-        Database.commit()
+            image_file_M.delete(img.file)
+        except:
+            print('CouFile {} not found'.format(img.file))
+        finally:
+            Database.session.delete(img)
+            Database.commit()
 
     @staticmethod
     def upload(images):

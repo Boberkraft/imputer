@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, send_file, redirect, url_for, send_from_directory
 from flask_cors import CORS, cross_origin
 
-from imagemanager import ImageFileManager
+from imagemanager import image_file_M
 from PIL import Image, ImageOps
 from io import BytesIO
 import threading
@@ -16,9 +16,7 @@ CORS(app)
 
 ALLOWED_MODE = ('selected', 'database')
 ALLOWED_ACTION = ('add', 'select', 'delete', 'unselect')
-UPLOAD_FOLDER = 'uploads/'
-THUMB_FOLDER = 'thumbs/'
-image_file_M = ImageFileManager(UPLOAD_FOLDER, THUMB_FOLDER)
+
 
 
 class Config:
@@ -178,3 +176,5 @@ app.run()
 # TODO: detect image duplicates
 # TODO: do way do undo delete baceuse missclick
 # TODO: block uploading without tags
+# TODO: prograss bar
+# TODO: when removing cards empty space is still there

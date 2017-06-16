@@ -32,7 +32,7 @@ class ImageFileManager(metaclass=Singleton):
         self.upload_folder = os.path.join(path, folder)  # abs path for folder
         self.thumbnail_folder = os.path.join(path, thumb_folder)  # abs path for folder
 
-    def delete_file(self, file):
+    def delete(self, file):
         os.remove(os.path.join(self.thumbnail_folder, file))
         os.remove(os.path.join(self.upload_folder, file))
 
@@ -91,3 +91,7 @@ class ImageFileManager(metaclass=Singleton):
             raise AttributeError('File is no allowed or do not exist.')
 
         return original_filename, random_filename
+
+UPLOAD_FOLDER = 'uploads/'
+THUMB_FOLDER = 'thumbs/'
+image_file_M = ImageFileManager(UPLOAD_FOLDER, THUMB_FOLDER)
