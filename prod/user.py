@@ -43,6 +43,7 @@ class User:
 
     @staticmethod
     def add_uploaded(id, tags):
+
         if Database.session.query(Database.Uploaded).filter_by(image_id=id).first():
             Database.session.query(Database.Uploaded).filter_by(image_id=id).delete()
             img = Database.session.query(Database.Image).filter_by(id=id).first()
@@ -72,10 +73,9 @@ class User:
         got = Database.session.query(Database.Image).filter(Database.Image.tags.any(name=tag)).order_by(
             Database.func.random())
         try:
-
             if got:
                 return got[0].file
-        except ValueError:
+        except IndexError:
             pass
 
     @staticmethod

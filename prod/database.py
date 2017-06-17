@@ -69,7 +69,7 @@ Base.metadata.create_all(engine)
 
 session = Session()
 def commit():
-    Base.session.commit()
+    session.commit()
 
 """class User(db.Model):
     #...

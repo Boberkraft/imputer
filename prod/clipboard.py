@@ -36,9 +36,9 @@ class ClipBoard:
 
         cls.send_to_clipboard(win32clipboard.CF_DIB, data)
         pythoncom.CoInitialize()
-        shell = win32com.client.Dispatch("WScript.Shell")
-        cls.erase(tag)
-        shell.SendKeys('^(v)')
+        # shell = win32com.client.Dispatch("WScript.Shell")
+        # cls.erase(tag)
+        # shell.SendKeys('^(v)')
 
 
 if __name__ == '__main__':

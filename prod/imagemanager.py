@@ -58,7 +58,7 @@ class ImageFileManager(metaclass=Singleton):
         return fake_file
 
     def _make_small(self, img):
-        img.thumbnail((400 * self.QUAL, 300 * self.QUAL))
+        img.thumbnail((400 * self.QUAL, 300 * self.QUAL), Image.ANTIALIAS)
 
     def new(self, file):
         """Saves image in upload_path.
@@ -68,10 +68,12 @@ class ImageFileManager(metaclass=Singleton):
             original_filename: file name after securing it
             random_filename: name of saved file. Random and unique (i hope lol)
         """
+        print('*'*100)
         if file and allowed_file(file.filename):
             original_filename = secure_filename(file.filename)  # delete weird thinks
             random_filename = str(uuid.uuid4()) + '.' + original_filename.split('.')[1]  # generate rand filename
             img = Image.open(file)
+
             self._make_small(img)
             file.seek(0)
             img.save(file, 'PNG')
@@ -79,14 +81,14 @@ class ImageFileManager(metaclass=Singleton):
             file.save(os.path.join(self.upload_folder, random_filename))  # save it to uploads folder
             # now make another copy with white background
             img_w, img_h = img.size
-            background = Image.new('RGBA', (img_w, img_h), (255, 255, 255, 255))
+            background = Image.new('RGBA', (400 *self.QUAL, 300*self.QUAL), (255, 255, 255, 255))
             bg_w, bg_h = background.size
             offset = (bg_w - img_w) // 2, (bg_h - img_h) // 2
             background.paste(img, offset)
             # save it to file
             background.save(os.path.join(self.thumbnail_folder, random_filename), 'PNG')
             file.seek(0)
-
+            print('eloelo')
         else:
             raise AttributeError('File is no allowed or do not exist.')
 
