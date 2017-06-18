@@ -12,7 +12,7 @@
                 <div class="hidden_form {% if not edit %} hide {% endif %} ">
                     <div class="field">
                         <p class="control">
-                            <input class="input is-danger tags-1" type="text" placeholder="smutek, zal, zlosc"
+                            <input class="input is-danger tags-1" type="text" placeholder="{{ _('smutek, zal, zlosc') }}"
                                    value="{% for tag in image.tags %} {{ tag }}, {% endfor %}">
                         </p>
                     </div>
@@ -34,16 +34,16 @@
     </div>
     <footer class="card-footer" id="{{ image.id }}">
 
-        <a class="card-footer-item save-bt {{ save }}">Zapisz</a>
+        <a class="card-footer-item save-bt {{ save }}">{{ _('Save') }}</a>
 
-        <a class="card-footer-item edit-bt {{ edit }}">Edytuj</a>
+        <a class="card-footer-item edit-bt {{ edit }}">{{ _('Edit') }}</a>
 
         {% if image.selected is none %}
-        <a triggered="0" class="card-footer-item select-bt">Zaznacz</a>
+        <a triggered="0" class="card-footer-item select-bt">{{ _('Select') }}</a>
         {% else %}
-        <a triggered="1" class="card-footer-item select-bt">Odznacz</a>
+        <a triggered="1" class="card-footer-item select-bt">{{ _('Unselect') }}</a>
         {% endif %}
-        <a class="card-footer-item delete-bt" tries="0">Usuń</a>
+        <a class="card-footer-item delete-bt" tries="0">{{ _('Delete') }}</a>
     </footer>
     <script>
         $(document).ready(function () {

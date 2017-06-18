@@ -1,28 +1,37 @@
 from flask import Flask, request, render_template, send_file, redirect, url_for, send_from_directory
 from flask_cors import CORS, cross_origin
-
+from flask_babel import Babel
 from imagemanager import image_file_M
 from PIL import Image, ImageOps
 from io import BytesIO
 import threading
 import os
 import uuid
-
+from flask_babel import gettext as _
 import database as Database
 from user import User
 
 app = Flask(__name__, static_folder='files', static_url_path='')
 CORS(app)
-
+babel = Babel(app)
 ALLOWED_MODE = ('selected', 'database')
 ALLOWED_ACTION = ('add', 'select', 'delete', 'unselect')
 
+LANGUAGES = {
+    'en': 'English',
+    'pl': 'Polish'
+}
+# BABEL
+print(_('elo'))
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(LANGUAGES.keys())
 
 class Config:
-    navigation_tabs = [('/', 'Menu'),
-                       ('/add/', 'Dodaj'),
-                       ('/upload/', 'Udostępnij'),
-                       ('/update/', 'Aktualizacje')]
+    navigation_tabs = [('/', _('Menu')),
+                       ('/add/', _('Add')),
+                       ('/upload/', _('Search')),
+                       ('/update/', _('About'))]
 
     images_path = '/uploads/'
 
