@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-06-18 14:01+0200\n"
+"POT-Creation-Date: 2017-06-18 16:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,23 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.4.0\n"
 
-#: server.py:25
-msgid "elo"
-msgstr ""
-
-#: server.py:31 templates/base.html:31
+#: server.py:30 templates/base.html:31
 msgid "Menu"
 msgstr ""
 
-#: server.py:32 templates/base.html:32
+#: server.py:31 templates/base.html:32
 msgid "Add"
 msgstr ""
 
-#: server.py:33 templates/base.html:33
+#: server.py:32 templates/base.html:33
 msgid "Search"
 msgstr ""
 
-#: server.py:34 templates/base.html:34 templates/update.html:5
+#: server.py:33 templates/base.html:34 templates/update.html:5
 msgid "About"
 msgstr ""
 
@@ -106,7 +102,7 @@ msgstr ""
 
 #: templates/index.html:8
 msgid ""
-"Here you have all your added images!. You are selection one of them when "
+"Here you have all your added images! You are selection one of them when "
 "you try to get a image from tag! Good luck."
 msgstr ""
 

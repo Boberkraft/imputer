@@ -22,10 +22,11 @@ LANGUAGES = {
     'pl': 'Polish'
 }
 # BABEL
-print(_('elo'))
+
 @babel.localeselector
 def get_locale():
     return request.accept_languages.best_match(LANGUAGES.keys())
+print(_('Add'))
 
 class Config:
     navigation_tabs = [('/', _('Menu')),
