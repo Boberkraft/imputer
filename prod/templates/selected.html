@@ -1,46 +1,21 @@
 {% set active_page = "/selected/" %}
 
-{%extends "base.html" %}
+{% extends "base.html" %}
 {% block content %}
-<h1 class="title">Zaznaczone</h1>
+<h1 class="title">{{ _('Selected') }}</h1>
 <h2 class="subtitle">
-    <p class="is-large">Znajdują się tutaj twoje zaznaczaone obrazki. Tutaj możesz edytować je wszystkie na raz.</p>
+    <p class="is-large">{{ _('Here you have all your selected images. You can edit them all at once.') }}</p>
 </h2>
 
 
 <div class="columns">
     <div class="columns">
         <div class="column">
-            Zarządzanie wszystkimi zaznaczonymi:
+            {{ _('Manage selected:') }}
         </div>
     </div>
 </div>
-<div class="tile is-ancestor">
-    <div class="tile is-vertical is-parent">
-        <div class="tile is-child">
-            <p class="title">Dodaj wszędzie tagi:</p>
-            <div class="field">
-                <p class="control">
-                    <input class="input is-info" type="text" id="tags_all_input" placeholder="smutek, zal, zlosc">
-                </p>
-            </div>
-        </div>
-        <div class="tile is-parent">
-            <div class="tile is-child has-text-centered">
-                <a class="button is-primary" id="tags_all">Dodaj globalne tagi</a>
-            </div>
-        </div>
 
-    </div>
-    <!--TODO: Change it so it needs to be clicked 2 times-->
-    <div class="tile is-4 is-vertical is-parent">
-        <div class="tile is-child has-text-centered">
-                <a class="button is-primary" id="save_all">Dodaj wszystkie obrazki</a>
-            </div>
-        <div class="tile is-child has-text-centered">
-            <a class="button is-warning" id="unselect_all" tries="0">Odznacz wszystko</a>
-        </div>
-    </div>
-</div>
+{% include "edit_form.html" %}
 <div class="empty"></div>
 {% endblock %}}

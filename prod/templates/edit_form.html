@@ -1,0 +1,27 @@
+<div class="tile is-ancestor">
+    <div class="tile is-vertical is-parent">
+        <div class="tile is-child">
+            <p class="title">{{ _('Add tags to every image')  }}</p>
+            <div class="field">
+                <p class="control">
+                    <input class="input is-info" type="text" id="tags_all_input" placeholder="{{ _('smutek, zal, zlosc') }}">
+                </p>
+            </div>
+        </div>
+        <div class="tile is-parent">
+            <div class="tile is-child has-text-centered">
+                <a class="button is-primary" id="tags_all">{{ _('Add global tags') }}</a>
+            </div>
+        </div>
+
+    </div>
+    <!--TODO: Change it so it needs to be clicked 2 times-->
+    <div class="tile is-4 is-vertical is-parent">
+        <div class="tile is-child has-text-centered">
+                <a class="button is-primary" id="save_all">{{ _('Add all images') }}</a>
+            </div>
+        <div class="tile is-child has-text-centered">
+            <a class="button is-warning" id="unselect_all" tries="0">{{ _('Unselect all') }}</a>
+        </div>
+    </div>
+</div>
