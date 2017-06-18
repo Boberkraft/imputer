@@ -1,31 +1,31 @@
+import subprocess
 import keyboard
+import shlex
 import requests
-from PIL import Image
-from io import BytesIO
 from clipboard import ClipBoard
-import requests
-import shutil
 
 
-
-class Client:
-
-    def listen(self):
-        while True:
-            keyboard.wait('.')
-            typed = keyboard.record(' ')
-            tag = ''.join(keyboard.get_typed_strings(typed))
-            self.paste_image(tag)
-
-    def paste_image(self, tag):
-        print('pripering')
-        r = requests.get('http://localhost:5000/get_image/{}'.format(tag))
-
-        if r.status_code == 200 and r.text:
-            path = r.text
-            ClipBoard.paste(path, tag)
+def load_image(tag):
+    print('Loading tag:', tag)
+    r = requests.get('http://localhost:5000/get_image/{}'.format(tag),data='siemka' )
+    print('Loading complete')
+    if r.status_code == 200 and r.text:
+        path = r.text
+        ClipBoard.paste(path, tag)
 
 
+# load_image('funny')
+while True:
+    keyboard.wait('alt+x')
+    p = subprocess.Popen(shlex.split('py -3 _client.py'),
+                         stdin=subprocess.PIPE,
+                         stdout=subprocess.PIPE,
+                         universal_newlines=True)
 
-cl = Client()
-cl.listen()
+    print('requesting')
+    tag = p.stdout.readlines()
+    if tag and tag[0].strip():
+        tag = tag[0].strip()
+        load_image(tag)
+    else:
+        print('no tag')

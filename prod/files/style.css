@@ -1,0 +1,30 @@
+.empty {
+    height: 52px;
+}
+
+.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.selected {
+    background-color: #00d1b2;
+    box-shadow: 0 0px 10px 0 #00d1b2;
+}
+
+.nav {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+.card-content {
+    background-color: white;
+}
+.card-footer  {
+    background-color: white;
+}
