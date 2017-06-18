@@ -4,15 +4,14 @@ import shlex
 import requests
 from clipboard import ClipBoard
 
+
 def load_image(tag):
-    print('loding tag:', tag)
-    requests.get('http://localhost:5000')
-    r = requests.get('http://localhost:5000/get_image/{}'.format(tag))
-    print('tag:', tag)
+    print('Loading tag:', tag)
+    r = requests.get('http://localhost:5000/get_image/{}'.format(tag),data='siemka' )
+    print('Loading complete')
     if r.status_code == 200 and r.text:
         path = r.text
         ClipBoard.paste(path, tag)
-    print(repr(tag))
 
 
 # load_image('funny')
@@ -24,9 +23,9 @@ while True:
                          universal_newlines=True)
 
     print('requesting')
-    tag = p.stdout.readlines()[0].strip()
-    if tag:
+    tag = p.stdout.readlines()
+    if tag and tag[0].strip():
+        tag = tag[0].strip()
         load_image(tag)
     else:
         print('no tag')
-

@@ -68,7 +68,7 @@ class ImageFileManager(metaclass=Singleton):
             original_filename: file name after securing it
             random_filename: name of saved file. Random and unique (i hope lol)
         """
-        print('*'*100)
+        print('*' * 100)
         if file and allowed_file(file.filename):
             original_filename = secure_filename(file.filename)  # delete weird thinks
             random_filename = str(uuid.uuid4()) + '.' + original_filename.split('.')[1]  # generate rand filename
@@ -81,7 +81,7 @@ class ImageFileManager(metaclass=Singleton):
             file.save(os.path.join(self.upload_folder, random_filename))  # save it to uploads folder
             # now make another copy with white background
             img_w, img_h = img.size
-            background = Image.new('RGBA', (400 *self.QUAL, 300*self.QUAL), (255, 255, 255, 255))
+            background = Image.new('RGBA', (400 * self.QUAL, 300 * self.QUAL), (255, 255, 255, 255))
             bg_w, bg_h = background.size
             offset = (bg_w - img_w) // 2, (bg_h - img_h) // 2
             background.paste(img, offset)
@@ -93,6 +93,7 @@ class ImageFileManager(metaclass=Singleton):
             raise AttributeError('File is no allowed or do not exist.')
 
         return original_filename, random_filename
+
 
 UPLOAD_FOLDER = 'uploads/'
 THUMB_FOLDER = 'thumbs/'

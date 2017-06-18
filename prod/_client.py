@@ -1,10 +1,12 @@
 import sys
 from PyQt5 import QtWidgets, QtCore
 
+7
+
 
 class Imputer(QtWidgets.QMainWindow):
     def __init__(self):
-        QtWidgets.QMainWindow.__init__(self)
+        QtWidgets.QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
         self.editor = QtWidgets.QLineEdit(self)
         self.editor.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.editor.move(25, 40)
@@ -38,11 +40,6 @@ class Imputer(QtWidgets.QMainWindow):
         tag = self.editor.text()
         print(tag)
         exit()
-        # r = requests.get('http://localhost:5000/get_image/{}'.format(tag))
-        #
-        # if r.status_code == 200 and r.text:
-        #     path = r.text
-        #     ClipBoard.paste(path, tag)
 
 
 app = QtWidgets.QApplication(sys.argv)

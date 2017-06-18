@@ -18,7 +18,6 @@ ALLOWED_MODE = ('selected', 'database')
 ALLOWED_ACTION = ('add', 'select', 'delete', 'unselect')
 
 
-
 class Config:
     navigation_tabs = [('/', 'Menu'),
                        ('/add/', 'Dodaj'),
@@ -44,7 +43,7 @@ def upload_files():
             name, random = image_file_M.new(file)  # add files to disc and return filenames
             images.append(dict(name=random, original_name=name, file=random))  # just like in database
     User.upload(images)  # upload them to database
-    images = User.get_uploaded().all()  # return uploaded images
+    images = User.get_uploaded()  # return uploaded images
     return render_template('cards.html', images=images)
 
 
@@ -81,8 +80,6 @@ def change():
     return redirect(url_for('get_single_card', id=msg['id']))
 
 
-
-
 @app.route('/uploads/<path:name>')
 def get_files(name):
     """Returns thumbnail with this random name."""
@@ -95,7 +92,6 @@ def dodaj():
     """Page for adding more images"""
     # get loaded but not saved images
     images = User.get_uploaded()
-    images = [img for img in images]
 
     return render_template('add.html', images=images)
 
@@ -105,7 +101,6 @@ def selected_page():
     """Page for working with selected images"""
     # get selected images
     images = User.get_selected()
-    images = [img for img in images]
 
     return render_template('selected.html', images=images)
 
@@ -160,11 +155,18 @@ def get_image_page(tag):
 @app.route('/')
 def main():
     images = User.get_images()
-    images = [img for img in images]
     return render_template('index.html', images=images)
 
+if __name__ == "__main__":
+    # maybe move this to another file?
+    from tornado.wsgi import WSGIContainer
+    from tornado.httpserver import HTTPServer
+    from tornado.ioloop import IOLoop
 
-app.run()
+    http_server = HTTPServer(WSGIContainer(app))
+    http_server.listen(5000)
+    IOLoop.instance().start()
+
 # TODO: searching by tag
 # TODO: online server to upload/download pictures
 # TODO: message to online server

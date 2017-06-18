@@ -13,15 +13,15 @@
 
 var active_requests = 0;
 
-$( document ).ajaxSend(function() {
-  active_requests = active_requests + 1;
-  console.log(active_requests);
+$(document).ajaxSend(function () {
+    active_requests = active_requests + 1;
+    console.log(active_requests);
 });
 
 
-$( document ).ajaxComplete(function() {
-  active_requests = active_requests - 1;
-  console.log(active_requests);
+$(document).ajaxComplete(function () {
+    active_requests = active_requests - 1;
+    console.log(active_requests);
 });
 
 
@@ -78,7 +78,7 @@ function send_data(data, site, callback) {
         data: JSON.stringify(data, null, '\t'),
         contentType: 'application/json;charset=UTF-8',
         success: function (result) {
-            if (typeof callback === "undefined"){
+            if (typeof callback === "undefined") {
                 console.log(result);
             }
             else {
@@ -103,7 +103,7 @@ $('#attachments').change(function () {
         cache: false,
         success: function (result) {
             console.log('new images');
-            console.log(result.length/1400);
+            console.log(result.length / 1400);
             $('output').html(result);
             // $('#edit_menu_online').addClass('hide');
             $('#edit_menu_local').removeClass('hide');
@@ -175,27 +175,50 @@ function unselect_image(thisObj) {
  *                  Functions to invoked on buttons with global meaning
  * ********************************************************************************
  */
+// delete_all, save_all
+function custom_click(thisObj, func) {
+    var tries = thisObj.attr('tries');
+    tries = parseInt(tries);
+    if (tries == 0) {
+        thisObj.attr('tries', '1');
+        thisObj.removeClass('is-warning');
+        thisObj.addClass('is-danger');
+    } else {
+        thisObj.attr('tries', '0');
+        thisObj.removeClass('is-danger');
+        thisObj.addClass('is-warning');
+        func();
+    }
+};
+
 // EDITING HOOK to unselect all selected TODO: Just send Query to database and delete output.
 $('#unselect_all').click(function () {
-    $('.select-bt').each(function () {
-        console.log($(this));
-        unselect_image($(this));
-    });
+    custom_click($(this), function () {
+        $('.select-bt').each(function () {
+            console.log($(this));
+            unselect_image($(this));
+        });
+    })
 });
 
 // EDITING HOOK to trigger save button on every CARD
-$('#save_all').click(function () {
-    $('.save-bt').each(function () {
-        save_image($(this));
-    });
+$('#delete_all').click(function () {
+    custom_click($(this), function () {
+        $('.delete-bt').each(function () {
+            delete_image($(this));
+        });
+    })
 });
 
 // EDITING HOOK to trigger delete button on every CARD
-$('#delete_all').click(function () {
-    $('.delete-bt').each(function () {
-        delete_image($(this));
-    });
+$('#save_all').click(function () {
+    custom_click($(this), function () {
+        $('.save-bt').each(function () {
+            save_image($(this));
+        });
+    })
 });
+
 
 // EDITING HOOK to add tag to every loaded CARD input field
 $('#tags_all').click(function () {
@@ -214,6 +237,14 @@ $('#tags_all').click(function () {
     });
 
 });
+
+// EDITING HOOK. if enter is pressed on global tags input it triggers click
+$('#tags_all_input').keypress(function (e) {
+    if (e.which == 13) {
+        $('#tags_all').trigger('click')
+    }
+});
+
 
 /**
  * ********************************************************************************
@@ -240,7 +271,7 @@ $('output').on('click', '.delete-bt', function () {
 
 // CARD Hook. If Save button pressed It sends AJAX to with tags in its input field.
 $('output').on('click', '.save-bt', function () {
-     save_image($(this))
+    save_image($(this))
 });
 
 

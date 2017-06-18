@@ -3,6 +3,7 @@ import os
 import random
 from imagemanager import image_file_M
 
+
 class User:
     @staticmethod
     def get_by_id(id):
@@ -39,7 +40,7 @@ class User:
 
     @staticmethod
     def get_selected():
-        return Database.session.query(Database.Image).join(Database.Selected)
+        return Database.session.query(Database.Image).join(Database.Selected).all()
 
     @staticmethod
     def add_uploaded(id, tags):
@@ -81,7 +82,7 @@ class User:
     @staticmethod
     def get_uploaded():
         return (Database.session.query(Database.Image)
-                .join(Database.Uploaded))
+                .join(Database.Uploaded)).all()
 
     @staticmethod
     def delete(id):
@@ -101,7 +102,7 @@ class User:
         new_images = []
         uploaded = []
         for img in images:
-            # kword unpacking might me risky. Should i do it?
+            # kwarg unpacking might me risky. Should i do it?
             new_image = Database.Image(name=img['name'],
                                        original_name=img['original_name'],
                                        file=img['file'])
@@ -120,7 +121,7 @@ class User:
 
         return (Database.session.query(Database.Image)
                 .outerjoin(Database.Uploaded)
-                .filter(Database.Uploaded.id == None))
+                .filter(Database.Uploaded.id == None)).all()
 
 
 if __name__ == '__main__':
