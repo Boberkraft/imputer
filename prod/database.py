@@ -62,14 +62,12 @@ class Tag(Base):
 
 Base.metadata.create_all(engine)
 
-
-# img = Image(name='Zenek')
-# print(img)
-
-
 session = Session()
+
+
 def commit():
     session.commit()
+
 
 """class User(db.Model):
     #...

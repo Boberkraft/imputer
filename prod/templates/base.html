@@ -27,11 +27,14 @@
             <span></span>
             <span></span>
         </span>
-        <div class="nav-right nav-menu">
-            <a class="nav-item is-tab is-hidden-tablet is-active">{{ _('Menu') }}</a>
-            <a class="nav-item is-tab is-hidden-tablet">{{ _('Add') }}</a>
-            <a class="nav-item is-tab is-hidden-tablet">{{ _('Search') }}</a>
-            <a class="nav-item is-tab is-hidden-tablet">{{ _('About') }}</a>
+        <div class="nav-right nav-menu ">
+            {% for short, name in config.navigation_tabs %}
+            <a href="{{ short }}"
+               class="nav-item is-tab is-hidden-tablet {% if short == active_page %} is-active {% endif %}">
+                {{name}}
+            </a>
+            {% endfor %}
+
             <a href="/selected/" class="nav-item is-tab {% if active_page == "/selected/" %} is-active {% endif
             %}">Zaznaczone!</a>
         </div>

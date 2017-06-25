@@ -7,7 +7,7 @@ from clipboard import ClipBoard
 
 def load_image(tag):
     print('Loading tag:', tag)
-    r = requests.get('http://localhost:5000/get_image/{}'.format(tag),data='siemka' )
+    r = requests.get('http://localhost:5000/get_image/{}'.format(tag), data='siemka')
     print('Loading complete')
     if r.status_code == 200 and r.text:
         path = r.text

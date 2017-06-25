@@ -18,10 +18,16 @@
     <!--TODO: Change it so it needs to be clicked 2 times-->
     <div class="tile is-4 is-vertical is-parent">
         <div class="tile is-child has-text-centered">
-                <a class="button is-primary" id="save_all">{{ _('Add all images') }}</a>
+                <a class="button is-primary" id="save_all" tries="0">{{ _('Add all images') }}</a>
             </div>
+        {% if active_page == "/selected" %}
         <div class="tile is-child has-text-centered">
             <a class="button is-warning" id="unselect_all" tries="0">{{ _('Unselect all') }}</a>
         </div>
+        {% else %}
+        <div class="tile is-child has-text-centered">
+            <a class="button is-warning" id="delete_all" tries="0">{{ _('Delete all images') }}</a>
+        </div>
+        {% endif %}
     </div>
 </div>

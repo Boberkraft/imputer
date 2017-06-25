@@ -7,11 +7,12 @@ from imagemanager import image_file_M
 class User:
     @staticmethod
     def get_by_id(id):
-        # Return image with specific id
+        """Return image with specific id"""
         return Database.session.query(Database.Image).filter_by(id=id).first()
 
     @staticmethod
     def unselect(id=None):
+        """Remove image from database selected"""
         if id is None:
             # delete all records
             Database.session.query(Database.Selected).delete()
@@ -21,20 +22,20 @@ class User:
         Database.commit()
 
     @staticmethod
-    def select(id=None):
+    def select(id):
+        """Add image to database selected"""
         exist = Database.session.query(Database.Selected).filter_by(image_id=id).first()
         if not exist:
-            if id is None:
-                pass
-            else:
-                selected = Database.Selected(image_id=id)
-                Database.session.add(selected)
+            selected = Database.Selected(image_id=id)
+            Database.session.add(selected)
             Database.commit()
         else:
-            print('This image is already selected')
+            # image already selected
+            pass
 
     @staticmethod
     def delete_selected():
+        """Unselect every image"""
         Database.session.query(Database.Image).delete()
         Database.commit()
 
@@ -49,34 +50,37 @@ class User:
             Database.session.query(Database.Uploaded).filter_by(image_id=id).delete()
             img = Database.session.query(Database.Image).filter_by(id=id).first()
         else:
-            print('Deleting tags.')
             # this image is already added. Lets change its tags.
             img = Database.session.query(Database.Image).filter_by(id=id).first()
             img.tags = []  # delete
-        print(img)
         for tag in tags.split(','):
+            # inspect tags
             tag = tag.strip().lower()
             if tag:
                 if not Database.session.query(Database.Tag).filter_by(name=tag).first():
                     # tag not found
+                    # creating new tag
                     Database.session.add(Database.Tag(name=tag))
-                    print('Creating new tag:', tag)
                 database_tag = Database.session.query(Database.Tag).filter_by(name=tag).first()
-                print('SELECTED TAG!!!!!!!!!!!', database_tag)
                 img.tags.append(database_tag)
         Database.commit()
 
     @staticmethod
     def get_by_tag(tag):
-        tag = tag.strip()
-        print('lloooking for', tag, len(tag))
+        """
 
+        :param tag: tag serching for
+        :return: image path
+        """
+        tag = tag.strip()  # eliminate white spaces
         got = Database.session.query(Database.Image).filter(Database.Image.tags.any(name=tag)).order_by(
-            Database.func.random())
+            Database.func.random())  # get random image with given tag
+        # TODO: Emite sound
         try:
             if got:
                 return got[0].file
         except IndexError:
+            # image with this tage not found
             pass
 
     @staticmethod
@@ -86,19 +90,24 @@ class User:
 
     @staticmethod
     def delete(id):
-        print('DELETED IMAGE WITH ID =', id)
+        """Delete image with given id"""
         Database.session.query(Database.Uploaded).filter_by(image_id=id).delete()
         img = Database.session.query(Database.Image).filter_by(id=id).first()
         try:
             image_file_M.delete(img.file)
         except:
-            print('CouFile {} not found'.format(img.file))
+            print('File {} not found'.format(img.file))
         finally:
             Database.session.delete(img)
             Database.commit()
 
     @staticmethod
     def upload(images):
+        """
+        Add images to `uploaded` table
+        :param images: dict with fields as in the database
+        :return: ids of uploaded images
+        """
         new_images = []
         uploaded = []
         for img in images:
@@ -118,7 +127,6 @@ class User:
 
     @staticmethod
     def get_images():
-
         return (Database.session.query(Database.Image)
                 .outerjoin(Database.Uploaded)
                 .filter(Database.Uploaded.id == None)).all()

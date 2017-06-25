@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2017-06-18 16:27+0200\n"
+"POT-Creation-Date: 2017-06-18 18:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.4.0\n"
 
-#: server.py:29 server.py:33 templates/base.html:32
+#: server.py:29 server.py:33
 msgid "Add"
 msgstr ""
 
-#: server.py:32 templates/base.html:31
+#: server.py:32
 msgid "Menu"
 msgstr ""
 
-#: server.py:34 templates/base.html:33
+#: server.py:34
 msgid "Search"
 msgstr ""
 
-#: server.py:35 templates/base.html:34 templates/update.html:5
+#: server.py:35 templates/update.html:5
 msgid "About"
 msgstr ""
 
@@ -92,8 +92,12 @@ msgstr ""
 msgid "Add all images"
 msgstr ""
 
-#: templates/edit_form.html:24
+#: templates/edit_form.html:25
 msgid "Unselect all"
+msgstr ""
+
+#: templates/edit_form.html:29
+msgid "Delete all images"
 msgstr ""
 
 #: templates/index.html:6

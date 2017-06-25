@@ -1,8 +1,6 @@
 import sys
 from PyQt5 import QtWidgets, QtCore
 
-7
-
 
 class Imputer(QtWidgets.QMainWindow):
     def __init__(self):

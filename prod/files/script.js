@@ -71,7 +71,7 @@ Array.prototype.forEach.call(inputs, function (input) {
 // Universal function to send JSON to server.
 function send_data(data, site, callback) {
     $.ajax({
-        url: "http://localhost:5000/" + site,
+        url: document.location.origin  + "/" + site,
         type: "POST",
         processData: false,
         cache: false,
@@ -95,7 +95,7 @@ function send_data(data, site, callback) {
 $('#attachments').change(function () {
     var formData = new FormData($("#upload-file")[0]);
     $.ajax({
-        url: "http://localhost:5000/upload_files/",
+        url: document.location.origin + "/upload_files/",
         type: "POST",
         data: formData,
         processData: false,
@@ -112,6 +112,17 @@ $('#attachments').change(function () {
     });
 });
 
+$('.nav-toggle').click(function () {
+    var parent = $(this).parent().find('.nav-menu');
+    if (parent.hasClass('is-active')){
+        console.log('removing');
+        parent.removeClass('is-active');
+    }
+    else {
+        console.log('adding');
+        parent.addClass('is-active');
+    }
+});
 /**
  * ********************************************************************************
  *                  Functions to that change statis
