@@ -1,14 +1,8 @@
 
-prod/__pycache__/
 
-images/Thumbs\.db
 
 \.idea/
 
-prod/uploads/Thumbs\.db
+\python/
 
-prod/thumbs/Thumbs\.db
-
-prod/core/__pycache__/
-
-images/baza_doswiadczalna/sad/Thumbs\.db
+shubi_files/client/__pycache__/
