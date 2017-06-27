@@ -6,3 +6,9 @@
 \python/
 
 shubi_files/client/__pycache__/
+
+shubi_files/server/__pycache__/
+
+shubi_files/core/__pycache__/
+
+shubi_files/__pycache__/
