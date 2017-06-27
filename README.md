@@ -1,3 +1,6 @@
-# imputer [WIP]
-It works but very bad. Updates comming
-Description and usage comming soon. Develop at develop
+# Shubi [WIP]
+Yea! For now it works. 
+Some updates comming soon
+
+
+Description and usage soon too. Develop at develop.
