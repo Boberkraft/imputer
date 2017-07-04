@@ -1,4 +1,5 @@
 import sys
+import os
 from PyQt5.QtCore import QObject, QUrl, Qt
 from PyQt5.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterSingletonType, QQmlComponent, QQmlEngine
@@ -7,6 +8,16 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QThread, QMutex, QTimer
 from PyQt5.QtQuick import QQuickView
 import time
+import keyboard
+import requests
+
+try:
+    from clipboard import ClipBoard
+    from core import path
+except ImportError:
+    sys.path.insert(1, os.path.join(sys.path[0], '..'))
+    from clipboard import ClipBoard
+    from core import path
 
 # from core import path
 
@@ -63,6 +74,20 @@ style_path = 'style.qml'
 mutex = QMutex()
 
 
+def load_image(tag):
+    print('Loading tag:', tag)
+    try:
+        r = requests.get('{}get_image/{}'.format(path.host_name, tag), data='siemka')
+    except:
+        # TODO: change this exeption
+        print('Server is offine')
+    else:
+        print('Loading complete')
+        if r.status_code == 200 and r.text:
+            reply = r.text
+            ClipBoard.paste(reply, tag)
+
+
 class Imputer(QObject):
     new_round = True
 
@@ -83,23 +108,32 @@ class Imputer(QObject):
         return False
 
     def terminate(self):
-
+        print('Hiding')
         tag = win.findChild(QObject, 'textField')
 
         # tag = self.editor.text()
         entered_text = tag.property('text')
+        print('Accepted:', Imputer.new_round)
         if Imputer.new_round:
-            print(entered_text)
-            new_round = False
-        tag.setProperty('focus', False)
-        win.setProperty('visible', False)
+            Imputer.new_round = False
+            tag.setProperty('focus', False)
+            win.setProperty('visible', False)
+            if entered_text and entered_text.strip():
+                entered_text = entered_text.strip()
+                load_image(entered_text)
+            else:
+                print('Tag not found')
 
     def show_app(self):
-        print('showin app')
+        print('Showing application')
         win.setProperty('visible', True)
         tag = win.findChild(QObject, 'textField')
         tag.setProperty('focus', True)
+        Imputer.new_round = True
+
+        print(tag.property('focus'), win.property('visible'))
         # win.setFocus()
+
 
 initlialized = False
 
@@ -114,16 +148,16 @@ initlialized = False
 # Execute the Application and Exit
 
 class Listener(QThread):
-    def __init__(self, update):
+    def __init__(self, show):
         super().__init__()
-        self.update = update
+        self.show = show
 
     def run(self):
         while True:
-            time.sleep(3)
-            print('showing')
-            QTimer.singleShot(0, self.update)
-
+            keyboard.wait('alt+x')
+            # time.sleep(5)
+            QTimer.singleShot(0, self.show)
+        # QTimer.singleShot(0, self.show)
 
 
 def run():
@@ -133,16 +167,18 @@ def run():
     engine = QQmlEngine()
     component = QQmlComponent(engine, QUrl('style.qml'))
     win = component.create()
+    # tag = win.findChild(QObject, 'textField')
+    # tag.setProperty('focus', True)
+    # win.setProperty('visible', True)
 
     # con = QWidget.createWindowContainer(component)
     imputer = Imputer()
-    imputer.win = win
+    win.textUpdated.connect(imputer.terminate)
     listener = Listener(imputer.show_app)
     listener.start()
 
     exit(app.exec_())
 
-print(help(QTimer.singleShot))
 
 if __name__ == '__main__':
     run()

@@ -4,8 +4,9 @@ import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
 
 ApplicationWindow {
+    id: mainObj
     objectName: "mainObj"
-    visible: false
+    visible: true
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.X11BypassWindowManagerHint
 
     width: 190
@@ -48,19 +49,16 @@ ApplicationWindow {
         font.pointSize: 12
         smooth: true
         antialiasing: true
-        property int first_time: 0
+        property int changes: 0
         onActiveFocusChanged: {
-
-            if (this.first_time > 0) {
-
-                hide()
-
+            this.changes = this.changes + 1
+            if (this.changes > 1)
+            {
+                textUpdated(1)
             }
-            else {
 
-            this.first_time = this.first_time + 1
-            }
         }
+
     }
 
 
