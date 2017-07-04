@@ -4,13 +4,13 @@ from PyQt5.QtWidgets import QApplication, QSystemTrayIcon, QMenu, QWidget
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterSingletonType, QQmlComponent, QQmlEngine
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, QEvent, Qt
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QThread, QMutex
+from PyQt5.QtCore import QThread, QMutex, QTimer
 from PyQt5.QtQuick import QQuickView
+import time
 
 # from core import path
 
 style_path = 'style.qml'
-
 
 # import sys
 # from PyQt5 import QtWidgets, QtCore
@@ -62,7 +62,10 @@ style_path = 'style.qml'
 # exit(app.exec_())
 mutex = QMutex()
 
+
 class Imputer(QObject):
+    new_round = True
+
     def __init__(self):
         super(Imputer, self).__init__()
         app.installEventFilter(self)
@@ -85,12 +88,20 @@ class Imputer(QObject):
 
         # tag = self.editor.text()
         entered_text = tag.property('text')
-        print(entered_text)
-        quit()
+        if Imputer.new_round:
+            print(entered_text)
+            new_round = False
+        tag.setProperty('focus', False)
+        win.setProperty('visible', False)
+
+    def show_app(self):
+        print('showin app')
+        win.setProperty('visible', True)
+        tag = win.findChild(QObject, 'textField')
+        tag.setProperty('focus', True)
+        # win.setFocus()
 
 initlialized = False
-entered_text = None
-
 
 
 # win.textUpdated.connect(lambda x: print('KlikuKluku!', x))
@@ -102,6 +113,18 @@ entered_text = None
 
 # Execute the Application and Exit
 
+class Listener(QThread):
+    def __init__(self, update):
+        super().__init__()
+        self.update = update
+
+    def run(self):
+        while True:
+            time.sleep(3)
+            print('showing')
+            QTimer.singleShot(0, self.update)
+
+
 
 def run():
     global app, win
@@ -110,29 +133,16 @@ def run():
     engine = QQmlEngine()
     component = QQmlComponent(engine, QUrl('style.qml'))
     win = component.create()
+
     # con = QWidget.createWindowContainer(component)
     imputer = Imputer()
     imputer.win = win
-    win.show()
+    listener = Listener(imputer.show_app)
+    listener.start()
+
     exit(app.exec_())
 
-def show():
-    global win, mutex
-    mutex.lock()
-    win.show()
-
-def wait_for_end():
-    global win, mutex
-    mutex.lock()
-    mutex.unlock()
-
-def hide():
-    global win, mutex
-    win.hide()
-    mutex.unlock()
+print(help(QTimer.singleShot))
 
 if __name__ == '__main__':
     run()
-
-
-

@@ -4,7 +4,8 @@ import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
 
 ApplicationWindow {
-    visible: true
+    objectName: "mainObj"
+    visible: false
     flags: Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.X11BypassWindowManagerHint
 
     width: 190
@@ -50,7 +51,7 @@ ApplicationWindow {
         property int first_time: 0
         onActiveFocusChanged: {
 
-            if (this.first_time > 90) {
+            if (this.first_time > 0) {
 
                 hide()
 
