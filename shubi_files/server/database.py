@@ -3,7 +3,7 @@ from sqlalchemy import text, Column, Integer, String, DateTime, Table, ForeignKe
 from sqlalchemy.orm import relationship, backref, sessionmaker
 from sqlalchemy.sql import func
 from sqlalchemy import create_engine
-from shubi_files.core import path
+from core import path
 
 db_path = path.get('server/database/local.db')
 engine = create_engine('sqlite:///{}'.format(db_path), echo=True)

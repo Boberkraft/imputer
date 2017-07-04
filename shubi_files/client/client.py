@@ -2,9 +2,18 @@ import subprocess
 import keyboard
 import requests
 import sys, os
+from PyQt5.QtCore import QThread
 
-from clipboard import ClipBoard
-from shubi_files.core import path
+
+try:
+    from clipboard import ClipBoard
+    from core import path
+except ImportError:
+    sys.path.insert(1, os.path.join(sys.path[0], '..'))
+    from clipboard import ClipBoard
+    from core import path
+
+
 
 
 def load_image(tag):
@@ -25,15 +34,19 @@ def load_image(tag):
 # load_image('funny')
 
 def run():
-    while True:
-        client_path = '{} {}'.format(path.pythonw, path.get('client/_client.py'))
+    client_path = '{} {}'.format(path.pythonw, path.get('client/_client.py'))
+    p = subprocess.Popen(client_path,
+                         stdin=subprocess.PIPE,
+                         stdout=subprocess.PIPE,
+                         universal_newlines=True)
+    # FIXME: stop using popen REALLLY I HAVE NO IDEA HOW TO OVERCOME THIS
+    # Two times i thied to to this with threading: Pythonic and QThread but when called this way
+    # it unclickable or isnt at the top
+    for tags in p.stdout.readline():
+        print('Waithing for input')
         keyboard.wait('alt+x')
-        p = subprocess.Popen(client_path,
-                             stdin=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             universal_newlines=True)
-
-        tag = p.stdout.readlines()
+        tag = tags
+        print(2)
         if tag and tag[0].strip():
             tag = tag[0].strip()
             load_image(tag)

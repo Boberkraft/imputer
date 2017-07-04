@@ -1,5 +1,7 @@
 """Creates small thumbnails and works on raw images"""
-from shubi_files.core.singleton import Singleton
+import sys
+print([print(p) for p in sys.path])
+from core.singleton import Singleton
 from werkzeug.utils import secure_filename
 import os
 from io import BytesIO

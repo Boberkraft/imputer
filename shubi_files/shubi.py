@@ -14,11 +14,10 @@ from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QThread
 
-sys.path.insert(0, os.path.join(os.getcwd(), 'core'))
+# sys.path.insert(0, os.path.join(os.getcwd(), 'core'))
 sys.path.insert(0, os.path.join(os.getcwd(), 'server'))
 sys.path.insert(0, os.path.join(os.getcwd(), 'client'))
-# print(sys.path)
-from shubi_files.server import server
+# print([print(p) for p in sys.path])
 from core import path
 import server
 import client

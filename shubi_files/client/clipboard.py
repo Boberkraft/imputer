@@ -7,7 +7,7 @@ import win32com.client
 import keyboard
 import pythoncom
 import os
-from shubi_files.core import path
+from core import path
 import sys
 
 server_uploads = path.get('server/uploads')
